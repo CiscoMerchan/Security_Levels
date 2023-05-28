@@ -16,7 +16,7 @@ The app is compose by pages:
 
 - secret : page were the secrets are keeped.
 
-## Get dependencise and packge in the app
+### Get dependencise and packge in the app
 
 1. Initialize npm. open terminal, get into the top folder and write : ```npm init -y``` (-y. to say yes to all the specifications). It wll install 'package.json' file
 
@@ -33,7 +33,7 @@ install all the dependencies in one line code.
 }
 ```
 
-## Render the page on the local machine
+### Render the page on the local machine
 
 1. Open 'app.js' file.
 
@@ -88,6 +88,64 @@ Server 3030
 - Go to the browser and type ```localhost3030``` and the web app will be working.
 
 - Check each page is display properly.
+
+<br />
+
+## Level 1 of Security
+
+###  Email & Password
+
+this is the lowes level of security. Email and password are registred in the database when user register and the hen the same user wants to login both data will be compared to verify that they are the same.
+
+To save the registred data is necesary to create a database. 
+
+*MongooseDB as database (this assume that mongoose as alredy been install in the local computer).
+
+**Mongoose**
+1. Stop terminal 'Ctrl+C'
+
+2. **Install mongoose**
+ ```
+ npm install mongoose
+```
+ Then'require' mongoose in app.js file
+
+3. **Connect mongodb**: 
+
+```
+/*mongoose connection to the local
+ host (:27017 is the local port by default for mongodb).*/ 
+mongoose.connect('mongodb://localhost:27017/userBD', {useNewUrlParser: true});
+```
+The **{ useNewUrlParser: true }** option is provided to handle the MongoDB URL parser deprecation warning. This option enables the new URL parser introduced in Mongoose version 5.3 or later.
+
+**userBD** is the name  of the DB (is the DB doesn't exist mongodb will creat it).
+
+4. Open another terminal tab and start mongoose.
+```$mongod``` to run mongoose.
+
+5. Back to the app terminal and run again ```nodemon app.js```
+
+6. **Create Schema DB**
+
+In app.js file, bellow mongoose connection.
+```
+const useSchema = {
+    email: String,
+    password: String
+};
+
+const User = new mongoose.model(User, userSchema);
+```
+*a.* The code defines a new Mongoose schema using mongoose.Schema(). The schema specifies the structure of the document to be stored in the 'User' collection.
+
+*b.* The userSchema object defines two properties: email and password. Both properties are of type String.
+
+*c.* After defining the schema, the code creates a Mongoose model using mongoose.model(). The model is assigned to the User variable.
+
+*d.* The first argument of mongoose.model() is the model name, which should be in uppercase and singular form. In this case, the model name is 'User'.
+
+*** Now the User model to perform database operations, such as creating new user documents, querying existing documents, or updating/deleting documents in the 'User' collection.
 
 
 
