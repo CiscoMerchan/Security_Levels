@@ -130,12 +130,12 @@ The **{ useNewUrlParser: true }** option is provided to handle the MongoDB URL p
 
 In app.js file, bellow mongoose connection.
 ```
-const useSchema = {
+const userSchema = {
     email: String,
     password: String
 };
 
-const User = new mongoose.model(User, userSchema);
+const User = new mongoose.model('User', userSchema);
 ```
 *a.* The code defines a new Mongoose schema using mongoose.Schema(). The schema specifies the structure of the document to be stored in the 'User' collection.
 
@@ -146,6 +146,44 @@ const User = new mongoose.model(User, userSchema);
 *d.* The first argument of mongoose.model() is the model name, which should be in uppercase and singular form. In this case, the model name is 'User'.
 
 *** Now the User model to perform database operations, such as creating new user documents, querying existing documents, or updating/deleting documents in the 'User' collection.
+
+7. **Fetch data from registration form to add in the DB**
+
+- Add a 'post' request routein app.js file:
+```
+// Registration 'POST' resquest
+app.post('/register', function(req, res){
+    const newUser = new User({
+        email: req.body.username,
+        password: req.body.password
+    });
+   
+    newUser.save().then(()=>{
+         /*now that the user is register, the user
+            has access to the 'secrets.ejs' page*/ 
+        res.render('secrets');
+        }).catch((err)=>{
+            console.log(err);
+        });
+
+});
+```
+
+*a.* Extracts the email and password (from 'name=""' in the form) from the request body submitted by the user.
+Creates a new instance of the User model using the extracted email and password.
+
+*b.* Invokes the save() method on the newUser object, which saves the user's information to the database.
+
+*c.* If the user is successfully saved to the database, the code inside the .then() callback is executed.
+
+*d.* The user is redirected to the 'secrets.ejs' page using the res.render() method. This assumes that there is a corresponding 'secrets.ejs' template defined in the application.
+
+*e.* If there is an error during the save operation, the code inside the .catch() callback is executed.
+The error is logged to the console for debugging purposes.
+
+*f.* This code demonstrates a basic registration process, where user data is saved to the database upon successful registration. After registration, the user is redirected to a page where they can access privileged information (in this case, the 'secrets.ejs' page). Any errors that occur during the registration process are logged to the console for error tracking and debugging.
+
+*At this point the email just check is thee is '@' and ' .' .* *And there is not condition in the password characters or minimun.* 
 
 
 
