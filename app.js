@@ -60,3 +60,29 @@ app.post('/register', function(req, res){
         });
 
 });
+
+// Login
+
+app.post('/login', function(req,res){
+    // email from the login form
+    const username = req.body.username;
+    // password from the form
+    const password = req.body.password;
+        // query to the 
+        User.findOne({ email: username })
+        .then(function(foundUser) {
+          if (foundUser) {
+            if (foundUser.password === password) {
+              console.log('Password:', foundUser.password);
+              res.render('secrets.ejs');
+            } else {
+              console.log('Incorrect password');
+            }
+          } else {
+            console.log('User not found');
+          }
+        })
+        .catch(function(error) {
+          console.error('An error occurred:', error);
+        });        
+});

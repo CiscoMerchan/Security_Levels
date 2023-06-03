@@ -1,6 +1,7 @@
 # Authentification & Security
 
 This is a simple web app that allow the user to write a secret. the porpuse is to learn how to secure a web app through different levels of securities.
+<hr>
 
 **npm package:**
 * express
@@ -15,6 +16,8 @@ The app is compose by pages:
 - login : Already register user type details and goes to 'secret' page.
 
 - secret : page were the secrets are keeped.
+
+<hr>
 
 ### Get dependencise and packge in the app
 
@@ -89,7 +92,7 @@ Server 3030
 
 - Check each page is display properly.
 
-<br />
+<hr />
 
 ## Level 1 of Security
 
@@ -157,7 +160,9 @@ app.post('/register', function(req, res){
         email: req.body.username,
         password: req.body.password
     });
-   
+```
+8. **User registerd and directed to 'secrets.ejs' page**   
+   ```
     newUser.save().then(()=>{
          /*now that the user is register, the user
             has access to the 'secrets.ejs' page*/ 
@@ -165,9 +170,7 @@ app.post('/register', function(req, res){
         }).catch((err)=>{
             console.log(err);
         });
-
-});
-```
+    });```
 
 *a.* Extracts the email and password (from 'name=""' in the form) from the request body submitted by the user.
 Creates a new instance of the User model using the extracted email and password.
@@ -184,6 +187,68 @@ The error is logged to the console for debugging purposes.
 *f.* This code demonstrates a basic registration process, where user data is saved to the database upon successful registration. After registration, the user is redirected to a page where they can access privileged information (in this case, the 'secrets.ejs' page). Any errors that occur during the registration process are logged to the console for error tracking and debugging.
 
 *At this point the email just check is thee is '@' and ' .' .* *And there is not condition in the password characters or minimun.* 
+
+9. **Login User registered**
+
+ Login functionality where the user's entered email and password are compared with the stored user data in the database. If the credentials match, it allows access to the secrets page; otherwise, it provides appropriate error messages.
+
+ POST request to the '/login' route. Let's break down what is happening in the code:
+
+1. The code begins with defining the route and the HTTP method using app.post('/login', function(req, res) { ... }). This means that when a POST request is made to the '/login' URL, the corresponding function will be executed.
+
+2. Inside the function, two variables are declared:
+
+- username: It extracts the value of the 'username' field from the request body. This assumes that the form data sent in the POST request includes a field named 'username'.
+- password: It extracts the value of the 'password' field from the request body. This assumes that the form data sent in the POST request includes a field named 'password'.
+- The code then proceeds to query the database using Mongoose. It uses the User model to find a document that matches the provided username (email) using User.findOne({ email: username }). This queries the database for a user document where the 'email' field matches the provided username.
+
+3. After executing the query, a promise-based callback function is chained using .then(function(foundUser) { ... }). If the query is successful, the callback function receives the foundUser document as an argument.
+
+4. Inside the callback function, it checks if foundUser exists (i.e., if a user with the provided username is found). If foundUser exists, it further checks if the password provided matches the stored password in the foundUser document using foundUser.password === password.
+
+5. If the password matches, it logs the stored password to the console using console.log('Password:', foundUser.password) and renders the 'secrets.ejs' template using res.render('secrets.ejs'). This typically means the user has successfully authenticated, and they can access the secrets page.
+
+6. If the password doesn't match, it logs 'Incorrect password' to the console using console.log('Incorrect password').
+
+7. If foundUser is not truthy (i.e., no user with the provided username is found), it logs 'User not found' to the console using console.log('User not found').
+
+8. If an error occurs during the database query or any other operation, the error is caught by the .catch(function(error) { ... }) block. The error is logged to the console using console.error('An error occurred:', error).
+
+#### Code
+
+```
+app.post('/login', function(req,res){
+    // email from the login form
+    const username = req.body.username;
+    // password from the form
+    const password = req.body.password;
+        // query to the 
+        User.findOne({ email: username })
+        .then(function(foundUser) {
+          if (foundUser) {
+            if (foundUser.password === password) {
+              console.log('Password:', foundUser.password);
+              res.render('secrets.ejs');
+            } else {
+              console.log('Incorrect password');
+            }
+          } else {
+            console.log('User not found');
+          }
+        })
+        .catch(function(error) {
+          console.error('An error occurred:', error);
+        });        
+});
+```
+### Note: Level 1 Security
+At this stage the security is very bad because any body how have access to the database it will be able to see clearly the password of the user.
+
+<hr>
+
+## Level 2 of Security
+
+
 
 
 
