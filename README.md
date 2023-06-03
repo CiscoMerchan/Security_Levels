@@ -248,6 +248,68 @@ At this stage the security is very bad because any body how have access to the d
 
 ## Level 2 of Security
 
+### Encryption
+For encrypt the user pasword we will us `mongoose-encryption` a npm package. Encryption is performed using `AES-256-CBC` with a random, unique initialization vector for each operation. Authentication is performed using HMAC-SHA-512.
+
+Mongoose-encryption
+Simple encryption and authentication for mongoose documents. Relies on the Node crypto module. Encryption and decryption happen transparently during save and find. Rather than encrypting fields individually, this plugin takes advantage of the BSON nature of mongoDB documents to encrypt multiple fields at once.
+
+for this level we will use only the encrytion (fro more information: `https://www.npmjs.com/package/mongoose-encryption`).
+To encrypt, the relevant fields are removed from the document, converted to JSON, enciphered in Buffer format with the IV and plugin version prepended, and inserted into the _ct field of the document. Mongoose converts the _ct field to Binary when sending to mongo.
+
+To decrypt, the _ct field is deciphered, the JSON is parsed, and the individual fields are inserted back into the document as their original data types.
+
+### 1. Install `mongoose-encryption` package
+(if `nodemon app.js` is runnig on the terminal, stop it Ctrl+C)
+On the terminal `$npm install mongoose-encryption` 
+
+### 2. require  `mongoose-encryption`
+On app.js file:
+`const ecrypt = require('mongoose-encryption');`
+
+### 3. Create a new mongoose Schema
+At level 1 the 'userSchema' is a javaScript object. Now it is requere a moongose Schema Object (in the documentation is show how to do it). becasue later will be need it to add `.plugin` to the new Schema.
+
+Actual Schema:
+```
+const userSchema = {
+    email: String,
+    password: String
+};
+``` 
+New Mongoose Schema (now is object created from mongoose Schema class):
+```
+const userSchema = new mongoose.Schema({
+    email: String,
+    password: String
+});
+
+const secret = "Thisourlittlesecret.";
+userSchema.plugin(encrypt, {secret: secret, encryptedFields: ['password']});
+
+const User = new mongoose.model("User", userSchema);
+```
+
+**Let's break down the code step by step:**
+
+**const userSchema = new mongoose.Schema({ email: String, password: String });:** This line creates a new Mongoose schema called userSchema for the "User" collection. The schema defines two fields: "email" and "password", both of which are of type String. This schema will be used to define the structure and validation rules for documents in the "User" collection.
+
+**const secret = "Thisourlittlesecret.";:** This line declares a secret key that will be used for encryption. This secret key should be kept secure and not shared publicly. It will be used to encrypt and decrypt the "password" field in the user documents.
+
+**userSchema.plugin(encrypt, {secret: secret, encryptedFields: ['password']});:** This line adds the "mongoose-encryption" plugin to the userSchema. The plugin is used to encrypt certain fields in the documents based on the provided options. In this case, the "password" field is specified as the field to be encrypted. The secret variable is used as the encryption secret key.
+
+**const User = new mongoose.model("User", userSchema);:** This line creates a Mongoose model named "User" based on the userSchema. The model represents the "User" collection in the MongoDB database. It provides an interface for interacting with the collection, including querying, creating, updating, and deleting documents.
+
+With this code, any documents created using the "User" model will have their "password" field encrypted using the "mongoose-encryption" plugin and the specified secret key. When retrieving documents from the database, the plugin will automatically decrypt the "password" field for you
+
+### Note: Level 2 Security
+This level of security is not enough because the key word to encrypt the passwor is visible in our code `const secret = "Thisourlittlesecret.";`. If some have access to this 'secret' and use the same package that we use to encrypt the user password that person can have access to real users password. In conclution this not very secure.
+
+<hr>
+
+
+
+
 
 
 

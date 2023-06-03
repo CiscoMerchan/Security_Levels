@@ -3,6 +3,8 @@ const  express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const mongoose = require('mongoose');
+// level2
+const encrypt = require('mongoose-encryption');
 
 
 // Initialize app with express
@@ -19,10 +21,13 @@ app.use(bodyParser.urlencoded({
 mongoose.connect('mongodb://127.0.0.1:27017/userBD', {useNewUrlParser: true});
 /*Create an js object to build to store the data in the dabase 
 to used as amodel*/ 
-const userSchema = {
+const userSchema = new mongoose.Schema({
     email: String,
     password: String
-};
+});
+
+const secret = "Thisourlittlesecret.";
+userSchema.plugin(encrypt, {secret: secret, encryptedFields: ['password']});
 
 const User = new mongoose.model("User", userSchema);
 
