@@ -307,6 +307,16 @@ This level of security is not enough because the key word to encrypt the passwor
 
 <hr>
 
+## Level 3 of Security
+
+### Environment Variables
+
+ **Package** `Dotenv` is a zero-dependency module that loads environment variables from a .env file into process.env. Storing configuration in the environment separate from code is based on The Twelve-Factor App methodology. more info: `https://www.npmjs.com/package/dotenv`
+
+1. in the terminal install `npm install dotenv `
+
+2. As early as possible in your application, import and configure dotenv (right at the top of the app.js file, 'dotenv' will be active and running): `require ('dotenv').config();`
+
 
 
 

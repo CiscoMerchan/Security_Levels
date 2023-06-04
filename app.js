@@ -1,4 +1,6 @@
 //jshint esversion:6
+// environmentvariables package
+require ('dotenv').config();
 const  express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
