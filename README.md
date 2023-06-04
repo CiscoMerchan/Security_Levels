@@ -351,12 +351,17 @@ Overall, this line of code adds an encryption plugin to a userSchema, specifying
 
 ### .gitignore
 
-In order to keep safe the 'keys' that we don't want to show in online to the public the `.env` file needs to be hide for that at the top level directory we have to create a `.gitignore` file. in order to do it correctly here is the documentation to follow the guidelines while using 'node.js', `https://github.com/github/gitignore/blob/main/Node.gitignore `
+In order to keep safe the 'keys' that we don't want to show on github to the public the `.env` file needs to be hide for that at the top level directory we have to create a `.gitignore` file. in order to do it correctly here is the documentation to follow the guidelines while using 'node.js', `https://github.com/github/gitignore/blob/main/Node.gitignore `
 
 5. Create a `.gitignore` file in the root directory of the project (in this case at "Secrets - Starting Code": `...\Screts - Starting Code> touch .gitignore`).
 
 6. Copy the code from the template file from `https://github.com/github/gitignore/blob/main/Node.gitignore `. And pasted inside '.gitignore'file.
 
+### Summary Level 3
+
+By following these steps, sensitive information such as secret keys can be securely stored in environment variables and accessed within the application without exposing them in the code or public repositories.
+
+<hr>
 
 
 
