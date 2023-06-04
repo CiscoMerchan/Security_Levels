@@ -317,6 +317,47 @@ This level of security is not enough because the key word to encrypt the passwor
 
 2. As early as possible in your application, import and configure dotenv (right at the top of the app.js file, 'dotenv' will be active and running): `require ('dotenv').config();`
 
+3. Create a `.env` file in the root directory of the project (in this case at "Secrets - Starting Code": `...\Screts - Starting Code> touch .env`). Add environment specific variables on new lines in the form of `NAME=VALUE`. For example: 
+``` 
+DB_HOST=localhost
+DB_USER=root
+DB_PASS=s1mp13 
+```
+For this app the line of code in app.js  `const secret = "Thisourlittlesecret.";` is remove and pasted on .env file formated with the dotenv requirements: `SECRET=Thisourlittlesecret.`, capital letters, no space, no quotations marks, no comas. **THIS NOT** a javaScript file is a text file.
+
+4. Now that the key is inside .env file is necessary add the key in the inside `userSchema.plugin`
+before:
+```
+userSchema.plugin(encrypt, {secret: secret, encryptedFields: ['password']});
+```
+
+now:
+
+```
+userSchema.plugin(encrypt, {secret: process.env.SECRET, encryptedFields: ['password']});
+```
+#### What it says this code? 
+* `userSchema` is likely a schema object defined using a library like Mongoose, which is commonly used with MongoDB to define the structure and behavior of documents in a collection.
+
+* `plugin` is a method provided by Mongoose that allows you to add additional functionality or behavior to a schema. In this case, the `encrypt` plugin is being added to the `userSchema`.
+
+* The second argument passed to the `plugin` method is an options object that configures the behavior of the `encrypt` plugin. It has two properties:
+
+ * `secret`: This property is set to the value of `process.env.SECRET`. `process.env` is a Node.js global object that provides access to environment variables. The `SECRET` variable is likely an environment variable that holds a secret key or passphrase used for encryption.
+
+ * `encryptedFields`: This property is an array containing the names of fields in the userSchema that should be encrypted. In this case, only the `'password'` field is specified, indicating that the password field of the user document should be encrypted using the provided secret.
+
+Overall, this line of code adds an encryption plugin to a userSchema, specifying that the password field should be encrypted using a secret key stored in an environment variable. This can enhance the security of the application by ensuring sensitive user data is stored securely.
+
+### .gitignore
+
+In order to keep safe the 'keys' that we don't want to show in online to the public the `.env` file needs to be hide for that at the top level directory we have to create a `.gitignore` file. in order to do it correctly here is the documentation to follow the guidelines while using 'node.js', `https://github.com/github/gitignore/blob/main/Node.gitignore `
+
+5. Create a `.gitignore` file in the root directory of the project (in this case at "Secrets - Starting Code": `...\Screts - Starting Code> touch .gitignore`).
+
+6. Copy the code from the template file from `https://github.com/github/gitignore/blob/main/Node.gitignore `. And pasted inside '.gitignore'file.
+
+
 
 
 
