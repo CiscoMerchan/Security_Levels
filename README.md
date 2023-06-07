@@ -363,6 +363,72 @@ By following these steps, sensitive information such as secret keys can be secur
 
 <hr>
 
+## Level 4 of Security
+
+### Hashing Passwork
+ Encryption remainds insecury because even if the secret key is hide in a .env file still possiblility of been hack. This next level of sucurity 'hasing' because  its properties is almost impossible to be hacked.
+
+ `md5` package, a JavaScript function for hashing messages with MD5. More info: `https://www.npmjs.com/package/md5`.
+
+1. On the terminal: `npm install md5`
+
+2. Require the module inside app.js. `const md5 = require('md5');`
+
+3. Add the md5 API to hash the password inside the schema.
+```
+// Registration 'POST' resquest
+app.post('/register', function(req, res){
+    const newUser = new User({
+        email: req.body.username,
+        password: md5(req.body.password) //using 'md5' API to hash the password
+    });
+   
+    newUser.save().then(()=>{
+         /*now that the user is register, the user
+            has access to the 'secrets.ejs' page*/ 
+        res.render('secrets');
+        }).catch((err)=>{
+            console.log(err);
+        });
+
+});
+```
+ * Now Because the regitred password of the user have been hash it is necessary to add the md5 method to the login POST request, this way when the registred user wants to login in the future  the user password  is hashed and it will compared with the hashed password registred to verify that they are the same.
+
+ 4. Add hash (md5)to login POST.
+ ```
+ // Login
+
+app.post('/login', function(req,res){
+    // email from the login form
+    const username = req.body.username;
+    // password from the form
+    const password = md5(req.body.password); //hash 'md5'
+        // query to the 
+        User.findOne({ email: username })
+        .then(function(foundUser) {
+          if (foundUser) {
+            if (foundUser.password === password) {
+              console.log('Password:', foundUser.password);
+              res.render('secrets.ejs');
+            } else {
+              console.log('Incorrect password');
+            }
+          } else {
+            console.log('User not found');
+          }
+        })
+        .catch(function(error) {
+          console.error('An error occurred:', error);
+        });        
+});
+
+ ``` 
+5. Run the app on the localhost and verify that it works well.
+
+### Summary Level 4
+By following these steps, the registered user's password is hashed, and when the user attempts to log in, the hashed password is compared with the stored hashed password to verify their authenticity.
+
 
 
 
